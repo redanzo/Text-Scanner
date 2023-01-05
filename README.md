@@ -1,5 +1,5 @@
 # Text-Scanner-Android-App
-Take a picture on your mobile app to copy the text from the camera/image.
+A simple text recognition app, tutorial followed by GeeksForGeeks.org. Developed using Android Studio and Java.
 
 ![image](https://user-images.githubusercontent.com/66446416/210860849-9dfe3aa3-513d-4902-b91c-19789817b313.png)
 
