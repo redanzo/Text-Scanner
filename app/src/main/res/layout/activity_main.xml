@@ -11,7 +11,7 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/scannerIMG"
+        android:src="@drawable/scanner"
         android:layout_marginTop="70dp"
         android:id="@+id/idIVLogo"
         />
@@ -29,15 +29,14 @@
         android:textStyle="bold"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="18dp"
-        android:layout_marginTop="50dp"
         android:layout_marginBottom="10dp"
-        android:id="@+id/idTitleHead"
+        android:id="@+id/idTVHead"
         />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/idTitleHead"
+        android:layout_below="@id/idTVHead"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="30dp"
