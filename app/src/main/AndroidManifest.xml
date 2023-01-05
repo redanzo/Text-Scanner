@@ -3,7 +3,7 @@
     package="com.example.textscannerapp">
 
     <!--below line is use to add camera feature in our app-->
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <!--permission for internet-->
     <uses-permission android:name="android.permission.INTERNET"/>

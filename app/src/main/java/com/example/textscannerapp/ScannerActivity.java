@@ -37,7 +37,7 @@ public class ScannerActivity extends AppCompatActivity {
     private TextView resultTV;
     private Button snapBtn,detectBtn;
     private Bitmap imageBitmap;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +85,7 @@ public class ScannerActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(grantResults.length > 0){
             boolean cameraPermission = grantResults[0] == PackageManager.PERMISSION_GRANTED;
