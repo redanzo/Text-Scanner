@@ -127,7 +127,7 @@ public class ScannerActivity extends AppCompatActivity {
                 Uri resultUri = result.getUri();
                 try {
                     imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-
+                    captureIV.setImageBitmap(imageBitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
