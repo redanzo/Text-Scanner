@@ -1,10 +1,8 @@
 # Text-Scanner-Android-App
 A simple text recognition app, Developed using Android Studio and Firebase ML Text Recogniztion Kit.
+Use Your Camera or an image from your gallery, crop the image to the text, and detect!
 
-![image](https://user-images.githubusercontent.com/66446416/210860849-9dfe3aa3-513d-4902-b91c-19789817b313.png)
 
-![image](https://user-images.githubusercontent.com/66446416/210860878-9cba7204-3ef9-4ff6-8f43-faf0ee03a4fb.png)
 
-Example
+https://user-images.githubusercontent.com/66446416/211078953-15a67dc5-a314-40b6-ac14-5d53ecab0171.mp4
 
-![Screenshot_20230105-134556_Text_Scanner_App](https://user-images.githubusercontent.com/66446416/210867134-d0679b9e-e16c-4912-962b-42982edf6614.jpg)
