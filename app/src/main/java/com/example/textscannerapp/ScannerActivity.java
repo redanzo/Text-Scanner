@@ -8,12 +8,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Camera;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -30,12 +34,16 @@ import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
+import java.io.IOException;
 
 public class ScannerActivity extends AppCompatActivity {
 
     private ImageView captureIV;
     private TextView resultTV;
-    private Button snapBtn,detectBtn;
+    private Button snapBtn,detectBtn, copyBtn;
     private Bitmap imageBitmap;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -47,11 +55,21 @@ public class ScannerActivity extends AppCompatActivity {
         resultTV = findViewById(R.id.idTVDetectedText);
         snapBtn = findViewById(R.id.idBtnSnap);
         detectBtn = findViewById(R.id.idBtnDetect);
+        copyBtn = findViewById(R.id.idBtnCopy);
+
+        copyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String scanned_text = resultTV.getText().toString();
+                copyToClipboard(scanned_text);
+            }
+        });
 
         detectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 detectText();
+                copyBtn.setVisibility(View.VISIBLE);
             }
         });
 
@@ -59,7 +77,8 @@ public class ScannerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(checkPermissions()){
-                    captureImage();
+                    CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).start(ScannerActivity.this);
+                    detectBtn.setVisibility(View.VISIBLE);
                 }else{
                     requestPermission();
                 }
@@ -77,12 +96,12 @@ public class ScannerActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this,new String[]{CAMERA},PERMISSION_CODE);
     }
 
-    private void captureImage(){
-        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(takePicture.resolveActivity(getPackageManager())!=null){
-            startActivityForResult(takePicture, REQUEST_IMAGE_CAPTURE);
-        }
-    }
+//     private void captureImage(){
+//        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if(takePicture.resolveActivity(getPackageManager())!=null){
+//            startActivityForResult(takePicture, REQUEST_IMAGE_CAPTURE);
+//        }
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -91,7 +110,8 @@ public class ScannerActivity extends AppCompatActivity {
             boolean cameraPermission = grantResults[0] == PackageManager.PERMISSION_GRANTED;
             if(cameraPermission){
                 Toast.makeText(this, "Permissions Granted...", Toast.LENGTH_SHORT).show();
-                captureImage();
+                CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).start(ScannerActivity.this);
+                detectBtn.setVisibility(View.VISIBLE);
             }else{
                 Toast.makeText(this, "Permissions Denied...", Toast.LENGTH_SHORT).show();
             }
@@ -101,10 +121,17 @@ public class ScannerActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
-            Bundle extras = data.getExtras();
-            imageBitmap = (Bitmap) extras.get("data");
-            captureIV.setImageBitmap(imageBitmap);
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if(resultCode == RESULT_OK){
+                Uri resultUri = result.getUri();
+                try {
+                    imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -137,5 +164,12 @@ public class ScannerActivity extends AppCompatActivity {
                 Toast.makeText(ScannerActivity.this, "Fail to detect text from image"+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void copyToClipboard(String text){
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("Copied data", text);
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(ScannerActivity.this, "Copied to Clipboard", Toast.LENGTH_SHORT).show();
     }
 }
